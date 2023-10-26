@@ -1,0 +1,50 @@
+Sure, let's focus on explaining the functions in the provided code:
+
+1. `getInternalLinks(bs, includeUrl)`: This function is responsible for extracting internal links from a web page.
+
+   - Parameters:
+     - `bs`: A BeautifulSoup object representing the parsed HTML of the web page.
+     - `includeUrl`: The URL of the web page from which the links should be extracted.
+
+   - Functionality:
+     - It takes the base URL (`includeUrl`) and parses it to extract the scheme (http/https) and netloc (domain).
+     - It finds all the anchor (`<a>`) elements in the HTML using a regular expression pattern that matches links starting with a '/' or links that contain the base URL (`includeUrl`).
+     - For each matching anchor element, it extracts the `href` attribute, which is the link URL.
+     - It appends these URLs to the `internalLinks` list after ensuring they are unique.
+     - If a link starts with '/', it is considered a relative link and is combined with the base URL. Otherwise, it is used as-is.
+     - Finally, it returns a list of internal link URLs found on the page.
+
+2. `getExternalLinks(bs, excludeUrl)`: This function extracts external links from a web page.
+
+   - Parameters:
+     - `bs`: A BeautifulSoup object representing the parsed HTML of the web page.
+     - `excludeUrl`: The URL of the current page, which should be excluded from the list of external links.
+
+   - Functionality:
+     - It finds all the anchor (`<a>`) elements in the HTML using a regular expression pattern that matches links starting with "http" and doesn't contain the `excludeUrl`.
+     - For each matching anchor element, it extracts the `href` attribute, which is the link URL.
+     - It appends these URLs to the `externalLinks` list after ensuring they are unique.
+     - It returns a list of external link URLs found on the page.
+
+3. `getRandomExternalLink(startingPage)`: This function fetches a web page and retrieves a random external link from it.
+
+   - Parameters:
+     - `startingPage`: The URL of the web page to start from.
+
+   - Functionality:
+     - It opens the web page specified by `startingPage` using `urlopen` and parses it using BeautifulSoup (`bs`).
+     - It calls `getExternalLinks` to extract the external links from the page, excluding links from the same domain as `startingPage`.
+     - If no external links are found on the current page, it prints a message indicating this and proceeds to look for internal links within the same domain (`domain`) and recursively calls itself to find a random external link within those internal links.
+     - If external links are found, it selects a random external link from the list and returns it.
+
+4. `followExternalOnly(startingSite)`: This is the main function that initiates the process of exploring external links.
+
+   - Parameters:
+     - `startingSite`: The starting URL from which the exploration begins.
+
+   - Functionality:
+     - It starts by calling `getRandomExternalLink` on the provided `startingSite` to obtain a random external link.
+     - It pretty-prints the randomly selected external link.
+     - It then recursively calls itself with the randomly selected external link as the new `startingSite`, continuing the process of exploring external links.
+
+These functions work together to scrape external links from web pages, following a random path through the internet, as explained earlier.
