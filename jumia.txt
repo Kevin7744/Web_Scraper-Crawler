@@ -1,0 +1,91 @@
+<title>Generic 720P HD USB WEB CAMERA WEBCAM WITH MIC @ Best Price Online | Jumia Kenya</title>
+
+	(within the title tag)
+	 <link rel="canonical" href="https://www.jumia.co.ke/generic-720p-hd-usb-web-camera-webcam-with-mic-129536376.html"/>
+
+the header tag
+products
+The base div class is <div class="col3 -df -i-ctr">
+it has a div class="inbox"
+	the child div is  <div class="flyout" role="menu">
+	here i can have a regex that will take all the href links to the other products being sold on the site	
+	
+		the main link with the span tag having the text revelent to the link
+		<a href="https://www.jumia.co.ke/mlp-jumia-official-stores/" class="itm" role="menuitem">
+		<span class="text">Official Stores</span>
+
+			 <a href="/phones-tablets/" class="itm" role="menuitem">
+			<span class="text">Phones &amp;Tablets</span>
+			
+			<a href="https://www.jumia.co.ke/electronics/" class="itm" role="menuitem">
+			<span class="text">TVs &amp;Audio</span>
+			
+			<a href="https://www.jumia.co.ke/home-office-appliances/" class="itm" role="menuitem">
+			<span class="text">Appliances</span>
+
+			<a href="/health-beauty/" class="itm" role="menuitem">
+			<span class="text">Health &amp;Beauty</span>
+
+			<a href="/home-office/" class="itm" role="menuitem">
+			<span class="text">Home &amp;Office</span>
+
+			<a href="/category-fashion-by-jumia/" class="itm" role="menuitem">
+			<span class="text">Fashion</span>
+
+			
+			<a href="/computing/" class="itm" role="menuitem">
+			<span class="text">Computing</span>
+
+			
+			<a href="https://www.jumia.co.ke/groceries/" class="itm" role="menuitem">
+			<span class="text">Supermarket</span>
+
+		
+			<a href="/sporting-goods/" class="itm" role="menuitem">
+			<span class="text">Sporting Goods</span>
+
+
+			<a href="/automobile/" class="itm" role="menuitem">
+			<span class="text">Automobile</span>
+
+			
+			<a class="itm" role="menuitem" tabindex="0">
+			<span class="text">Other categories</span>
+		
+		NOTE: ALL THE <a> TAGS ARE ENCLOSED INSIDE AN THE TAG
+
+end of header tag
+
+
+
+
+
+product information, for our case its the webcam
+inside the main class 
+ <main class="-pvs">
+
+<div class="brcbs col16 -pts -pbm">
+                        <a class="cbs" href="/">Home</a>
+                        <a class="cbs" href="/computing/">Computing</a>
+                        <a class="cbs" href="/computing-accessories/">Computer Accessories</a>
+                        <a class="cbs" href="/computing-audio-video-accessories/">Audio &amp;Video Accessories</a>
+                        <a class="cbs" href="/computer-webcams/">Webcams</a>
+                        <a class="cbs">720P HD USB WEB CAMERA WEBCAM WITH MIC</a>
+                    </div>
+
+parent div for the product details.
+<div class="col12">
+it has this div will the <b> and <br> tags that have the descriptive info about the product
+ <div class="markup -mhm -pvl -oxa -sc">
+
+
+there is this article tag 
+ <article class="card -mtm -pas">
+with parent div
+ <div class="-df">
+that haas only one h tag with two span tag containing the price of the product
+<span dir="ltr" data-price="true" class="-b -ltr -tal -fs16">KSh 1,390</span>
+                                            <div class="-df -i-ctr">
+                                                <span dir="ltr" data-price-old="true" class="-tal -gy5 -lthr -fs12">KSh 2,000</span>
+                                                <span data-disc="31%" class="bdg _dsct _sm _dyn -mls _sm">31%</span>
+                                            </div>
