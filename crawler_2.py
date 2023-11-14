@@ -60,12 +60,14 @@ def getTitle(html_file):
 def getProductInfo_and_Price(html_file):
     product_name = html_file.find('main').find_all('h1', {'class': '-fs20 -pts -pbxs'})[0].text.strip()
     info = html_file.find("main").find_all('div', {'class': '-hr -mtxs -pvs'})
-    info_text = ""    
-    for div in info:  
+    info_text = ""
+    for div in info:
         price = div.find('span', {'dir': 'ltr'}).text.strip()
-        discount_price = div.find('span', {'data-disc': True}).text.strip()
-        info_text += f"Product: {product_name}\nPrice: {price}\nDiscount Price: {discount_price}\n\n"
+        original_price = div.find_all('span', {'dir': 'ltr'})[1].text.strip()  # Get the second span element
+        discount_percentage = div.find('span', {'data-disc': True})['data-disc']
+        info_text += f"Product: {product_name}\nPrice: {price}\nOriginal Price: {original_price}\nDiscount Percentage: {discount_percentage}\n\n"
     return info_text
+
 
 def getOtherProducts(html_file):
     header = html_file.header
