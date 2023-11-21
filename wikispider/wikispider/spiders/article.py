@@ -1,20 +1,37 @@
 import scrapy
+from scrapy.linkextractors import LinkExtractor
+from scrapy.spiders import CrawlSpider, Rule
 
-
-class ArticleSpider(scrapy.Spider):
-    name = 'article'
-
-    def start_requests(self):
-        urls = [
-            'http://en.wikipedia.org/wiki/Python_'
-            '%28programming_language%29',
-            'https://en.wikipedia.org/wiki/Functional_programming',
-            'https://en.wikipedia.org/wiki/Monty_Python']
-        return [scrapy.Requests(url=url, callback=self.parse)
-            for url in urls]
+class ArticleSpider(CrawlSpider):
+    # name must be unique for each project
+    name = 'articles' 
+    # A list of start urls and allowed domains
+    allowed_domains = ['wikipedia.org']
+    start_urls  = ['https://en.wikipedia.org/wiki/'
+        'Benevolent_dictator_for_life']
+    #Links to follow and which to ignore using the regex .* that all the links are
+    #filtered through
+    rules = [
+        Rule(LinkExtractor(allow=r'^(/wiki/)((?!:).)*$'), 
+            callback='parse_items', 
+            follow=True,
+            cb_kwargs = {'is_article':True}),
+        Rule(LinkExtractor(allow='.*'),
+            callback='parse_items',
+            cb_kwargs={'is_article':False})
+        ]
         
-    def parse(self, response):
-        ulr = response.url
+    def parse_items(self, response, is_article):
+        print(response.url)
         title = response.css('h1::text').extract_first()
-        print("URL is: {}".format(url))
-        print("Ttle is: {}".format(title))
+        if is_article:
+            url = response.url
+            text = response.xpath('//div[@id="mw-content-text"]//text()').extract()
+            lastUpdated = response.css('li#footer-info-lastmod::text').extract_first()
+            lastUpdated = lastUpdated.replace('This page was last edited on ', '')
+            print("URL is: {}".format(url))
+            print("Title is: {}".format(title))
+            print('text is: {}'.format(text))
+            print('Last updated: {}'.format(lastUpdated))
+        else:
+            print('This is not an article: {}'.format(title))
