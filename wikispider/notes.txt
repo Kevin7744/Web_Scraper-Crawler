@@ -1,0 +1,6 @@
+Item pipeline
+    difference between parse_items and process items methods
+
+
+
+learning Scrapy by Dimitrios Kouzis-Loukas
