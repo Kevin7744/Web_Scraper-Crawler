@@ -15,7 +15,7 @@ from urllib.request import urlopen
 from bs4 import BeautifulSoup
 
 downloadDirectory = 'downloaded' # You can change if you want to
-baseUrl = 'http://pythonscraping.com'
+baseUrl = 'https://books.toscrape.com'
 
 def getAbsoluteURL(baseUrl, source):
     if source.startswith('http://www.'):
@@ -34,6 +34,10 @@ def getAbsoluteURL(baseUrl, source):
 def getDownloadPath(baseUrl, absoluteUrl, downloadDirectory):
     path = absoluteUrl.replace('www.', '')
     path = path.replace(baseUrl, '')
+    if 'http://' in path:
+        path = path.split('http://')[1]
+    elif 'https://' in path:
+        path = path.split('https://')[1]
     path = downloadDirectory+path
     directory = os.path.dirname(path)
 
@@ -42,13 +46,15 @@ def getDownloadPath(baseUrl, absoluteUrl, downloadDirectory):
     
     return path
 
-html = urlopen('http://www.pythonscraping.com') # as an example
+html = urlopen('https://books.toscrape.com') # as an example
 bs = BeautifulSoup(html, 'html.parser')
-downloadList = bs.findAll(src=True)
+downloadList = bs.findAll(src=True) # selects all tags that have the src attribute.
 
 for download in downloadList:
-    fileUrl = getAbsoluteURL(baseUrl, download['src'])
+    fileUrl = getAbsoluteURL(baseUrl, download['src']) # clean and normalize the urls.
     if fileUrl is not None:
         print(fileUrl)
 
 urlretrieve(fileUrl, getDownloadPath(baseUrl, fileUrl, downloadDirectory))
+
+
