@@ -1,0 +1,8 @@
+For connecting to the database
+
+    pip install mysql mysql-connector-python
+
+
+
+part 8
+timestamp : 2.05.51

@@ -68,4 +68,95 @@ class BookscraperPipeline:
 
         return item
 
+import mysql.connector
 
+class SaveToMySQLPipeline:
+
+    def __init__(self):
+        self.conn = mysql.connector.connect(
+            host = 'localhost',
+            user = 'root',
+            password = 'kevin4747',
+            database = 'books'
+        )
+
+        ## Create cursor to execute commands
+        self.cur = self.conn.cursor()
+
+        ## Create table books if it does not exist
+        self.cur.execute("""
+        CREATE TABLE IF NOT EXISTS books(
+            id int NOT NULL auto_increment,
+            url VARCHAR(255),
+            title text,
+            upc VARCHAR(255),
+            product_type VARCHAR(255),
+            price_excl_tax DECIMAL,
+            price_incl_tax DECIMAL,
+            tax DECIMAL,
+            price DECIMAL,
+            availability INTEGER,
+            reviews INTEGER,
+            stars INTEGER,
+            category VARCHAR(255),
+            description text,
+            PRIMARY KEY (id)
+        )
+            
+""")
+
+    def process_item(self, item, spider):
+
+        #Define insert statement
+        self.cur.execute("""
+        INSERT into books (
+            url,
+            title,
+            upc,
+            price_excl_tax,
+            price_incl_tax,
+            tax,
+            price,
+            availability,
+            reviews,
+            stars,
+            category,
+            description,
+        ) values (
+                %s,
+                %s,
+                %s,
+                %s,
+                %s,
+                %s,
+                %s,
+                %s,
+                %s,
+                %s,
+                %s,
+                %s,
+        )""",(
+            item["url"],
+            item["title"],
+            item["upc"],
+            item["price_excl_tax"],
+            item["price_incl_tax"],
+            item["tax"],
+            item["price"],
+            item["availability"],
+            item["reviews"],
+            item["stars"],
+            item["category"],
+            item["description"],
+        ))
+
+        ## Execute insert of data into database
+
+        self.conn.commit()
+        return item
+
+
+    # Close connection to database one scraping is complete 
+    def close_spider(self, spider):
+        self.cur.close()
+        self.conn.close()

@@ -1,10 +1,26 @@
 import scrapy
 from bookscraper.items import BookItem
+import random
 
 class BookspiderSpider(scrapy.Spider):
     name = "bookspider"
     allowed_domains = ["books.toscrape.com"]
     start_urls = ["https://books.toscrape.com/"]
+
+    # A list of random user agents,
+    # This is not effecient for a large scale website.
+    # user_agents_list = [
+    #     'Mozilla/5.0 (Macintosh; PPC Mac OS X 10 11_0) AppleWebKit/533.1 (KHTML, like Gecko) Chrome/59.0.811.0 Safari/533.1'
+    #     'Opera/8.18.(Windows NT 6.2; tt-RU) Presto/2.9.169 Version/11.00'
+    #     'Opera/8.40.(X11; Linux i686; ka-GE) Presto/2.9.176 Version/11.00'
+    #     'Opera/9.42.(X11; Linux x86_64; sw-KE) Presto/2.9.180 Version/12.00'
+    #     'Mozilla/5.0 (Macintosh; PPC Mac OS X 10 5_1 rv:6.0; cy-GB) AppleWebKit/533.45.2 (KHTML, like Gecko) Version/5.0.3 Safari/533.45.2'
+    #     'Opera/8.17.(X11; Linux x86_64; crh-UA) Presto/2.9.161 Version/11.00'
+    #     'Mozilla/5.0 (compatible; MSIE 5.0; Windows NT 5.1; Trident/3.1)'
+    #     'Mozilla/5.0 (Android 3.1; Mobile; rv:55.0) Gecko/55.0 Firefox/55.0'
+    #     'Mozilla/5.0 (compatible; MSIE 9.0; Windows CE; Trident/5.0)'
+    #     'Mozilla/5.0 (Macintosh; U; PPC Mac OS X 10 11_9; rv:1.9.4.20) Gecko/2019-07-26 10:00:35 Firefox/9.0'
+    # ]
 
     def parse(self, response):
         books = response.css('article.product_pod')
@@ -15,6 +31,8 @@ class BookspiderSpider(scrapy.Spider):
                 book_url = 'https://books.toscrape.com/' + relative_url
             else:
                 book_url = 'https://books.toscrape.com/catalogue/' + relative_url
+                # Pick a random user agent and insert it to the header on the callback whenever a request is sent.
+                # headers={"User-Agent": self.user_agents_list[random.randint(0, len(self.user_agents_list)-1)]}
             yield response.follow(book_url, callback=self.parse_book_page)
         
         next_page = response.css('li.next a ::attr(href)').get()
@@ -23,8 +41,10 @@ class BookspiderSpider(scrapy.Spider):
                 next_page_url = 'https://books.toscrape.com/' + next_page
             else:
                 next_page_url = 'https://books.toscrape.com/catalogue/' + next_page
+                # Pick a random user agent and insert it to the header on the callback whenever a request is sent.
             yield response.follow(next_page_url, callback=self.parse)
-                
+
+
     def parse_book_page(self, response):
         table_rows = response.css("table tr")
         book_item = BookItem()
