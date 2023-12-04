@@ -6,3 +6,9 @@ For connecting to the database
 
 part 8
 timestamp : 2.05.51
+
+
+
+proxies sites
+    -smartproxy
+    
