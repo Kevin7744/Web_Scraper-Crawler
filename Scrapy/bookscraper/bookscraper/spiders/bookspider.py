@@ -1,11 +1,22 @@
+from typing import Iterable
 import scrapy
+from scrapy.http import Request
 from bookscraper.items import BookItem
 import random
+from urllib.parse import urlencode
+
+API_KEY = 'e27e65ab-6033-4402-b5a8-e8762c9e0eee'
+
+def get_proxy_url(url):
+    payload = {'api_key': API_KEY, 'url':url}
+    proxy_url = 'https://proxy.scrapeops.io/v1/?' + urlencode(payload)
+    return proxy_url
 
 class BookspiderSpider(scrapy.Spider):
     name = "bookspider"
-    allowed_domains = ["books.toscrape.com"]
+    allowed_domains = ["books.toscrape.com", 'proxy.scrapeops.io']
     start_urls = ["https://books.toscrape.com/"]
+
 
     # A list of random user agents,
     # This is not effecient for a large scale website.
@@ -22,6 +33,11 @@ class BookspiderSpider(scrapy.Spider):
     #     'Mozilla/5.0 (Macintosh; U; PPC Mac OS X 10 11_9; rv:1.9.4.20) Gecko/2019-07-26 10:00:35 Firefox/9.0'
     # ]
 
+    # Its takes the 1st url and passes it to the proxy provider(scrapeops.io)
+    # It might still work without it but the start url will not be passed to the proxy
+    def start_requests(self):
+        yield scrapy.Request(url=get_proxy_url(self.start_urls[0]), callback=self.parse)
+
     def parse(self, response):
         books = response.css('article.product_pod')
         
@@ -33,7 +49,7 @@ class BookspiderSpider(scrapy.Spider):
                 book_url = 'https://books.toscrape.com/catalogue/' + relative_url
                 # Pick a random user agent and insert it to the header on the callback whenever a request is sent.
                 # headers={"User-Agent": self.user_agents_list[random.randint(0, len(self.user_agents_list)-1)]}
-            yield response.follow(book_url, callback=self.parse_book_page)
+            yield scrapy.Request(url=get_proxy_url(book_url), callback=self.parse_book_page)
         
         next_page = response.css('li.next a ::attr(href)').get()
         if next_page is not None:
@@ -42,7 +58,7 @@ class BookspiderSpider(scrapy.Spider):
             else:
                 next_page_url = 'https://books.toscrape.com/catalogue/' + next_page
                 # Pick a random user agent and insert it to the header on the callback whenever a request is sent.
-            yield response.follow(next_page_url, callback=self.parse)
+            yield scrapy.Request(url=get_proxy_url(next_page_url), callback=self.parse)
 
 
     def parse_book_page(self, response):
